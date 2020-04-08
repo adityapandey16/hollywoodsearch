@@ -1,0 +1,128 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="author" content="colorlib.com">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500" rel="stylesheet" />
+    <link href="css/main.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+    <div class="symbol">
+        <i class="material-icons" style="font-size:100px;color:white;padding-bottom: 0px;">local_movies</i>
+
+        <p style="padding-bottom: 0px;">Hollywood Movie Search</p>
+    </div>
+    <div class="s002">
+        <form>
+
+
+            <div class="inner-form">
+                <div class="input-field first-wrap">
+                    <div class="icon-wrap">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"></svg>
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path>
+                        </svg>
+                    </div>
+                    <input id="search1" type="text" placeholder="What are you looking for?" />
+                </div>
+
+
+                <div class="input-field fifth-wrap">
+                    <button class="btn-search" id="btn" type="button">SEARCH</button>
+
+                </div>
+
+            </div>
+            <div class="info">
+                <img src="" alt="" id="imagedisplay" width="400" style="float: left;" />
+                <div class="text-data">
+                    <h1><span id="titleMovie"></span></h1>
+                    <h2><span id="releaseDate"></span></h2>
+                    <p><span id="overview1"></span></p>
+                    <p><span id="rating"></span></p>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="conta">
+        <h3>Created By - Aditya Pandey</h3><br>
+        <a href="https://www.facebook.com/aditya.pandey.96930013" class="fa fa-facebook"></a>
+        <a href="https://www.instagram.com/aditya_pandey16/" class="fa fa-instagram"></a>
+    </div>
+
+    <script>
+        function ImageStatus() { //This function will be loaded when no image is fetched to remove any broken image icon !
+            document.getElementById("imagedisplay").src = "https://simg.nicepng.com/png/small/20-201455_comics-bubbles-stickers-messages-sticker-0-hello-comic.png";
+            document.getElementById("titleMovie").textContent = "Welcome to Hollywood Movie Search !";
+            document.getElementById("releaseDate").textContent = "Please Enter The Movie Name You Want To Search";
+        }
+
+        ImageStatus();
+        const URLprocessing = (ev) => {
+
+
+
+            ev.preventDefault();
+            let ImageQuery;
+            let BaseURL = "https://api.themoviedb.org/3/search/movie?api_key=2d6f455a6450fb50e8a9a4823744a650&query="; //Base URL 
+            let SearchKeyWord = document.getElementById("search1").value;
+            SearchKeyWord = SearchKeyWord.replace(/\s+/g, '+'); // This replaces all the Whitespaces and chains of whitespaces with '+' in order of the query
+            let SearchURL = BaseURL + SearchKeyWord; //Search URL
+            console.log(SearchURL);
+
+            getinfo();
+
+            async function getinfo() {
+                const response = await fetch(SearchURL);
+                const data = await response.json();
+
+                let Tr = data["total_results"];
+
+                if (Tr === 0) {
+
+                    // If else condition to handle the response from the server 
+                    document.getElementById("titleMovie").textContent = "RESULT NOT FOUND !";
+                    document.getElementById("overview1").textContent = "We didn't get what you were looking for !";
+                    document.getElementById("releaseDate").textContent = "Please Try Again !"
+                    document.getElementById("rating").textContent = "";
+
+
+
+                    document.getElementById("imagedisplay").src = "https://i.pinimg.com/originals/d1/0f/9a/d10f9a51d138ad169202553bde956e79.jpg";
+
+                } else {
+                    let overview = "Overview : " + data.results[0].overview;
+                    ImageQuery = data.results[0].poster_path;
+                    let imgUrl = `https://image.tmdb.org/t/p/w500${ImageQuery}`; //Image URL
+
+
+                    document.getElementById("imagedisplay").src = imgUrl;
+                    document.getElementById("titleMovie").textContent = "Movie Title - " + data.results[0].original_title;
+                    document.getElementById("releaseDate").textContent = "Release Date - " + data.results[0].release_date;
+                    document.getElementById("overview1").textContent = "Overview - " + data.results[0].overview;
+                    document.getElementById("rating").textContent = "Rating-" + data.results[0].vote_average;
+
+                }
+            }
+
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('btn').addEventListener('click', URLprocessing);
+        });
+    </script>
+
+
+
+</body>
+
+
+</html>
